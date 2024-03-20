@@ -31,3 +31,13 @@ jobs:
       - name: weixin
         run: |
           python3 main.py
+          
+    env:
+      APP_ID: ${{ secrets.APP_ID }}
+      APP_SECRET: ${{ secrets.APP_SECRET }}
+      USER_ID: ${{ secrets.USER_ID }}
+      TEMPLATE_ID: ${{ secrets.TEMPLATE_ID }}
+      PROVINCE: ${{ secrets.PROVINCE }}
+      CITY: ${{ secrets.CITY }}
+      START_DATE: ${{ secrets.START_DATE }}
+      BIRTHDAY: ${{ secrets.BIRTHDAY }}
