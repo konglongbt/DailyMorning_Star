@@ -19,9 +19,9 @@ def get_color():
 
 def get_access_token():
     # appId
-    app_id = config["app_id"]
+    app_id = os.environ["APP_ID"]
     # appSecret
-    app_secret = config["app_secret"]
+    app_secret = os.environ["APP_SECRET"]
     post_url = ("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={}&secret={}"
                 .format(app_id, app_secret))
     try:
@@ -137,20 +137,17 @@ def send_message(to_user, access_token, city_name, weather, max_temperature, min
     today = datetime.date(datetime(year=year, month=month, day=day))
     week = week_list[today.isoweekday() % 7]
     # 获取在一起的日子的日期格式
-    love_year = int(config["love_date"].split("-")[0])
-    love_month = int(config["love_date"].split("-")[1])
-    love_day = int(config["love_date"].split("-")[2])
+    love_year = int(os.environ["START_DATE"].split("-")[0])
+    love_month = int(os.environ["START_DATE"].split("-")[1])
+    love_day = int(os.environ["START_DATE"].split("-")[2])
     love_date = date(love_year, love_month, love_day)
     # 获取在一起的日期差
     love_days = str(today.__sub__(love_date)).split(" ")[0]
     # 获取所有生日数据
-    birthdays = {}
-    for k, v in config.items():
-        if k[0:5] == "birth":
-            birthdays[k] = v
+    birthdays = os.environ["BIRTHDAY"].split(',')    
     data = {
         "touser": to_user,
-        "template_id": config["template_id"],
+        "template_id": os.environ["TEMPLATE_ID"],
         "url": "http://weixin.qq.com/download",
         "topcolor": "#FF0000",
         "data": {
@@ -197,13 +194,13 @@ def send_message(to_user, access_token, city_name, weather, max_temperature, min
         }
     }
 
-    for key, value in birthdays.items():
+    for birthday in birthdays:
         # 获取距离下次生日的时间
-        birth_day = get_birthday(value["birthday"], year, today)
+        birth_day = get_birthday(birthday, year, today)
         if birth_day == 0:
-            birthday_data = "今天{}生日哦，祝{}生日快乐！".format(value["name"], value["name"])
+            birthday_data = "今天{}生日哦，祝{}生日快乐！".format("云云", "云云")
         else:
-            birthday_data = "距离{}的生日还有{}天".format(value["name"], birth_day)
+            birthday_data = "距离{}的生日还有{}天".format("云云", birth_day)
         # 将生日数据插入data
         data["data"][key] = {"value": birthday_data, "color": get_color()}
     headers = {
@@ -240,7 +237,7 @@ if __name__ == "__main__":
     # 获取accessToken
     accessToken = get_access_token()
     # 接收的用户
-    users = config["user"]
+    users = os.environ["USER_ID"].split(',')
     # 传入省份和市获取天气信息
     province, city = config["province"], config["city"]
     weather, max_temperature, min_temperature = get_weather(province, city)
