@@ -142,10 +142,7 @@ def send_message(to_user, access_token, city_name, weather, max_temperature, min
     love_day = int(os.environ["START_DATE"].split("-")[2])
     love_date = date(love_year, love_month, love_day)    
     # 获取在一起的日期差
-    love_days = str(today.__sub__(love_date)).split(" ")[0]
-    print(love_days)
-    love_days = today - datetime.strptime(os.environ["START_DATE"], "%Y-%m-%d")
-    print(love_days)
+    love_days = str(today.__sub__(love_date)).split(" ")[0]    
     # 获取所有生日数据
     birthdays = os.environ["BIRTHDAY"].split(',')    
     data = {
